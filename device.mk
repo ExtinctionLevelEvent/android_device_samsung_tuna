@@ -19,12 +19,6 @@
 #
 # Everything in this directory will become public
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/samsung/tuna/kernel
-else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
 DEVICE_PACKAGE_OVERLAYS := device/samsung/tuna/overlay
 
 # This device is xhdpi.  However the platform doesn't
@@ -107,6 +101,9 @@ PRODUCT_PACKAGES += \
         LiveWallpapersPicker \
         VisualizationWallpapers \
         librs_jni
+
+PRODUCT_PACKAGES += \
+  Torch
 
 # Key maps
 PRODUCT_COPY_FILES += \
@@ -210,3 +207,7 @@ $(call inherit-product-if-exists, vendor/samsung/tuna/device-vendor.mk)
 BOARD_WLAN_DEVICE_REV := bcm4330_b2
 WIFI_BAND             := 802_11_ABG
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
+
+# Call in the Murdr'r
+$(call inherit-product-if-exists, vendor/nos/killrom/config/common.mk)
+$(call inherit-product-if-exists, vendor/google/killrom/config/common.mk)
