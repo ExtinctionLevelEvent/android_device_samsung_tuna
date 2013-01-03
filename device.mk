@@ -19,12 +19,6 @@
 #
 # Everything in this directory will become public
 
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-LOCAL_KERNEL := device/samsung/tuna/kernel
-else
-LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
 DEVICE_PACKAGE_OVERLAYS := device/samsung/tuna/overlay
 
 # This device is xhdpi.  However the platform doesn't
@@ -49,10 +43,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	power.tuna
 
-# torch
-PRODUCT_PACKAGES += \
-	Torch
-
 # Audio
 PRODUCT_PACKAGES += \
 	audio.primary.tuna \
@@ -60,8 +50,8 @@ PRODUCT_PACKAGES += \
 	audio.usb.default
 
 PRODUCT_COPY_FILES += \
-	device/samsung/tuna/audio/audio_policy.conf:system/etc/audio_policy.conf
-
+	device/samsung/tuna/audio/audio_policy.conf:system/etc/audio_policy.conf \
+	device/samsung/tuna/audio_effects.conf:system/vendor/etc/audio_effects.conf
 
 PRODUCT_PACKAGES += \
 	tuna_hdcp_keys
@@ -69,11 +59,7 @@ PRODUCT_PACKAGES += \
 #PRODUCT_PACKAGES += \
 #	keystore.tuna
 
-PRODUCT_PACKAGES += \
-        GNexusParts
-
 PRODUCT_COPY_FILES += \
-	$(LOCAL_KERNEL):kernel \
 	device/samsung/tuna/init.tuna.rc:root/init.tuna.rc \
 	device/samsung/tuna/init.tuna.usb.rc:root/init.tuna.usb.rc \
 	device/samsung/tuna/fstab.tuna:root/fstab.tuna \
@@ -81,10 +67,6 @@ PRODUCT_COPY_FILES += \
 	device/samsung/tuna/media_profiles.xml:system/etc/media_profiles.xml \
 	device/samsung/tuna/media_codecs.xml:system/etc/media_codecs.xml \
 	device/samsung/tuna/gps.conf:system/etc/gps.conf
-
-# Bluetooth configuration files
-PRODUCT_COPY_FILES += \
-	system/bluetooth/data/main.le.conf:system/etc/bluetooth/main.conf
 
 # Wifi
 ifneq ($(TARGET_PREBUILT_WIFI_MODULE),)
@@ -95,20 +77,15 @@ PRODUCT_COPY_FILES += \
 	device/samsung/tuna/bcmdhd.cal:system/etc/wifi/bcmdhd.cal
 
 PRODUCT_PROPERTY_OVERRIDES := \
-	wifi.interface=wlan0 \
-	wifi.supplicant_scan_interval=180
+	wifi.interface=wlan0
 
 # Enable AAC 5.1 output
 PRODUCT_PROPERTY_OVERRIDES += \
-        media.aac_51_output_enabled=true
+	media.aac_51_output_enabled=true
 
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 	persist.sys.usb.config=mtp
-
-# SIM Toolkit
-PRODUCT_PACKAGES += \
-	Stk
 
 # NFC
 PRODUCT_PACKAGES += \
@@ -116,6 +93,14 @@ PRODUCT_PACKAGES += \
         libnfc_jni \
         Nfc \
         Tag
+
+# LED brightness property
+PRODUCT_PROPERTY_OVERRIDES += \
+     persist.sys.led-brightness=31
+
+# Charging LED property
+PRODUCT_PROPERTY_OVERRIDES += \
+        persist.sys.enable-charging-led=0
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -153,10 +138,8 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
 	frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
 	frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
-	frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml
-
-PRODUCT_COPY_FILES += $(call add-to-product-copy-files-if-exists,\
-packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml)
+	frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+	frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml
 
 # Melfas touchscreen firmware
 PRODUCT_COPY_FILES += \
@@ -196,6 +179,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sf.lcd_density=320
 
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.hwui.disable_scissor_opt=true
+
 PRODUCT_CHARACTERISTICS := nosdcard
 
 PRODUCT_TAGS += dalvik.gc.type-precise
@@ -206,7 +192,6 @@ PRODUCT_PACKAGES += \
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
-	make_ext4fs \
 	e2fsck \
 	setup_fs
 
@@ -226,11 +211,6 @@ $(call inherit-product-if-exists, vendor/samsung/tuna/device-vendor.mk)
 BOARD_WLAN_DEVICE_REV := bcm4330_b2
 WIFI_BAND             := 802_11_ABG
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
-
-# vold
-PRODUCT_COPY_FILES += \
-	device/samsung/tuna/vold.fstab:system/etc/vold.fstab
-
 
 # Call in the Murdr'r
 $(call inherit-product-if-exists, vendor/nos/killrom/config/common.mk)
