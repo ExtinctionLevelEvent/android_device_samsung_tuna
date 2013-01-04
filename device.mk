@@ -94,6 +94,10 @@ PRODUCT_PACKAGES += \
         Nfc \
         Tag
 
+# Torch
+PRODUCT_PACKAGES += \
+        Torch
+
 # LED brightness property
 PRODUCT_PROPERTY_OVERRIDES += \
      persist.sys.led-brightness=31
@@ -211,6 +215,7 @@ $(call inherit-product-if-exists, vendor/samsung/tuna/device-vendor.mk)
 BOARD_WLAN_DEVICE_REV := bcm4330_b2
 WIFI_BAND             := 802_11_ABG
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
+
 
 # Call in the Murdr'r
 $(call inherit-product-if-exists, vendor/nos/killrom/config/common.mk)
