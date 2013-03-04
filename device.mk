@@ -96,7 +96,8 @@ PRODUCT_PACKAGES += \
 
 # Torch
 PRODUCT_PACKAGES += \
-        Torch
+        Torch \
+	DSPManager
 
 # LED brightness property
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -224,5 +225,4 @@ WIFI_BAND             := 802_11_ABG
 $(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
 
 # Call in the Murdr'r
-$(call inherit-product-if-exists, vendor/nos/killrom/config/common.mk)
-$(call inherit-product-if-exists, vendor/google/killrom/config/common.mk)
+$(call inherit-product-if-exists, vendor/event/ele/config/common.mk)
